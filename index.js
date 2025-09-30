@@ -1,34 +1,23 @@
-const express = require("express");
+const express = require('express');
+
 require('dotenv').config();
 
-const {PORT}= process.env;
+const{PORT} = process.env;
+
+const apiRouter = require('./api/main');
 
 const app = express();
 
-app.get("/", function(req, res, next){
-    /*
-    req.header
-    req.params
-    req.query
-    req.body(solo post,put)
-    */
-    //res.send('prueba');
-    //req.json
+app.use(express.json());
 
-   // const {ejemplo}=req.params;
-    const {ejemplo}= req.query
-    console.log({ejemplo});
-    next();
-})
-app.get("/", function(req, res, next){
-    res.send('OK');
+//https://phpmyadmin.ctpoba.edu.ar
 
-})
+app.use('/api', apiRouter);
 
 app.listen(PORT, function(error){
-    if(error){
-        console.error(error);
-        process.exit(1);
-    }
-    console.log(`Escuchando en el puerto ${PORT}`);
+ if(error){
+    console.error(error);
+    process.exit(1);
+ }
+console.log(`escuchando em el puerto ${PORT}`);
 })
