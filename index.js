@@ -11,6 +11,7 @@ const app = express();
 app.use(express.json());
 
 //https://phpmyadmin.ctpoba.edu.ar
+//npm i @damianegreco/hashpass, es la libreria del profeuwu
 
 app.use('/api', apiRouter);
 
