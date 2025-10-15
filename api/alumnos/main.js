@@ -1,5 +1,9 @@
 const router = require("express").Router();
 const db = require('../../conexion');
+const fileUpload = require("express-fileupload");
+const path = require("path");
+
+const directorio = path.join(__dirname, "..","..", "archivos");
 
 router.get("/", function(req, rest, next){
     //req: lo recibido(respuesta), rest: se devuelve(envia/responde), next: busca siguiente coincidencia
@@ -26,9 +30,27 @@ router.get("/", function(req, rest, next){
    })
 })
 
-   router.post("/", function(req,res,next){
-      const {documento, apellidos, nombres} = req.body;
-      let sql = "INSERT INTO alumnos (documento, apellidos, nombres) ";
+   router.post("/", fileUpload(),function(req,res,next){
+      //const {documento, apellidos, nombres} = req.body;
+
+      if(!req.files || !req.files.archivo){
+         console.log("No hay archivos");
+         return res.status(403).send("NO hay archivo");
+      }
+         const {archivo} = req.files;
+         const filepath = path.join(directorio, archivo.name);
+         archivo.mv(filepath, function(error){
+            if(error){
+               console.error(error);
+               return res.status(500).send("Ocurrio un error");
+            }
+               res.status(201).send("Guardado");
+         })
+      
+
+      
+
+     /* let sql = "INSERT INTO alumnos (documento, apellidos, nombres) ";
       sql += "VALUES (?, ?, ?)";
 
       db.query(sql, [documento, apellidos, nombres])
@@ -38,8 +60,10 @@ router.get("/", function(req, rest, next){
       .catch((error)=>{
          console.error(error);
          res.status(500).send("Ocurrio un error en post");
-      })
+      })*/
    })
+
+   //post archivos y get
 
    router.delete("/:alumno_id", function(req, res, next){
       const {alumno_id} = req.params;
